@@ -1,26 +1,57 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="hello">
+    {{ boardList }}
+  </div>
 </template>
-
+ 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import axios from 'axios';
+ 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+  name: 'HelloWorld',
+  data() {
+    return {
+      boardList: [],
+    };
+  },
+  props: {
+    msg: String,
+  },
+  created() {
+    this.getBoardList();
+  },
+  methods: {
+    getBoardList() {
+      axios
+        .get('http://localhost:8082/board/get-board-list.do')
+        .then((response) => {
+          if (response.data.success) {
+            console.log(response.data.result);
+            this.boardList = response.data.result;
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+  },
+};
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+ 
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+h3 {
+  margin: 40px 0 0;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+li {
+  display: inline-block;
+  margin: 0 10px;
+}
+a {
+  color: #42b983;
 }
 </style>
